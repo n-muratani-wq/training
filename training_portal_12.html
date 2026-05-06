@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新入社員研修ポータル｜SIT・PIT</title>
+<style>
+/* ===== 全体設定 ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: #F7F6F3;
+  color: #1a1a1a;
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: #2563EB; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== レイアウト ===== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #E5E3DE;
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header h1 { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.header-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.badge-sit { background: #DBEAFE; color: #1E40AF; }
+.badge-pit { background: #D1FAE5; color: #065F46; }
+
+.layout { display: flex; min-height: 100vh; }
+
+/* ===== サイドバーナビ ===== */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #E5E3DE;
+  padding: 24px 0;
+  position: sticky;
+  top: 57px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
+}
+.nav-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9B9B9B;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 0 20px 8px;
+  margin-top: 16px;
+}
+.nav-section-label:first-child { margin-top: 0; }
+.nav-item {
+  display: block;
+  padding: 7px 20px;
+  font-size: 14px;
+  color: #4B4B4B;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all .15s;
+  text-decoration: none;
+}
+.nav-item:hover { background: #F7F6F3; color: #1a1a1a; text-decoration: none; }
+.nav-item.active { background: #EFF6FF; color: #2563EB; border-left-color: #2563EB; font-weight: 500; }
+
+/* ===== メインコンテンツ ===== */
+.main { flex: 1; padding: 40px 48px; max-width: 860px; }
+
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+.section-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.section-desc {
+  font-size: 14px;
+  color: #6B6B6B;
+  margin-bottom: 28px;
+}
+
+/* ===== 区切り ===== */
+.divider { height: 1px; background: #E5E3DE; margin: 32px 0; }
+
+/* ===== ブロック見出し ===== */
+.block-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B6B6B;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+}
+
+/* ===== チェックリスト ===== */
+.checklist { display: flex; flex-direction: column; gap: 6px; }
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.check-item:hover { background: #F9F8F6; }
+.check-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; cursor: pointer; width: 16px; height: 16px; }
+.check-label { font-size: 14px; color: #1a1a1a; line-height: 1.5; }
+.check-item.done .check-label { text-decoration: line-through; color: #9B9B9B; }
+.warn-text { color: #DC2626; font-weight: 600; }
+
+/* ===== 動画リスト ===== */
+/* ★ここを編集：動画を追加・削除できます★ */
+.video-list { display: flex; flex-direction: column; gap: 8px; }
+.video-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background .12s;
+  color: inherit;
+}
+.video-card:hover { background: #F0F6FF; text-decoration: none; }
+.video-play {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #DBEAFE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.play-icon {
+  width: 0; height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 12px solid #1D4ED8;
+  margin-left: 3px;
+}
+.video-title { font-size: 14px; font-weight: 500; color: #1a1a1a; }
+.video-dur { font-size: 12px; color: #6B6B6B; margin-top: 2px; }
+.video-link { font-size: 12px; color: #2563EB; margin-left: auto; flex-shrink: 0; white-space: nowrap; }
+
+/* ===== タイムライン（1日の流れ） ===== */
+/* ★ここを編集：時間・業務内容を自由に変更できます★ */
+.timeline-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+.ttab {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #E5E3DE;
+  background: #fff;
+  cursor: pointer;
+  transition: all .15s;
+  color: #4B4B4B;
+}
+.ttab.active-sit { background: #DBEAFE; color: #1E40AF; border-color: #93C5FD; }
+.ttab.active-pit { background: #D1FAE5; color: #065F46; border-color: #6EE7B7; }
+.timeline-pane { display: none; }
+.timeline-pane.active { display: block; }
+
+.tl-table { width: 100%; border-collapse: collapse; }
+.tl-table thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B6B6B;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 8px 12px;
+  border-bottom: 1px solid #E5E3DE;
+  text-align: left;
+}
+.tl-table tbody tr { border-bottom: 1px solid #F0EDE8; }
+.tl-table tbody tr:last-child { border-bottom: none; }
+.tl-table td {
+  padding: 10px 12px;
+  font-size: 14px;
+  vertical-align: top;
+}
+.tl-time { font-weight: 600; color: #2563EB; white-space: nowrap; width: 110px; }
+.tl-user { color: #1a1a1a; width: 200px; }
+.tl-staff { color: #1a1a1a; }
+.tl-note {
+  font-size: 12px;
+  color: #6B6B6B;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.tl-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.tag-important { background: #FEF3C7; color: #92400E; }
+.tag-record { background: #EDE9FE; color: #5B21B6; }
+
+/* ===== セルフチェック ===== */
+/* ★ここを編集：チェック項目を自由に変更できます★ */
+.sc-list { display: flex; flex-direction: column; gap: 6px; }
+.sc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+.sc-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #2563EB;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+/* ===== 体験対応 ===== */
+.taiken-card {
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.taiken-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #F0EDE8;
+}
+.step-list { display: flex; flex-direction: column; gap: 8px; }
+.step-item { display: flex; gap: 12px; font-size: 14px; align-items: flex-start; line-height: 1.5; }
+.step-n { font-size: 12px; font-weight: 600; color: #2563EB; min-width: 22px; padding-top: 2px; }
+
+/* ===== インフラカード ===== */
+.infra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.infra-card {
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.infra-card-title { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+.infra-items { display: flex; flex-direction: column; gap: 5px; }
+.infra-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4B4B4B; }
+.infra-dot { width: 5px; height: 5px; border-radius: 50%; background: #CBD5E1; flex-shrink: 0; }
+
+/* ===== クイズ ===== */
+.quiz-score-bar {
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.quiz-score-num { font-size: 24px; font-weight: 700; color: #1a1a1a; }
+.quiz-score-label { font-size: 12px; color: #6B6B6B; margin-top: 2px; }
+.prog-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.prog-bg { flex: 1; height: 6px; background: #E5E3DE; border-radius: 4px; overflow: hidden; }
+.prog-fill { height: 100%; background: #2563EB; border-radius: 4px; transition: width .3s; }
+.prog-label { font-size: 13px; color: #6B6B6B; white-space: nowrap; }
+.reset-btn {
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #4B4B4B;
+  font-family: inherit;
+}
+.reset-btn:hover { background: #F7F6F3; }
+.quiz-list { display: flex; flex-direction: column; gap: 16px; }
+.q-card {
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.q-num { font-size: 12px; color: #6B6B6B; margin-bottom: 6px; }
+.q-text { font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 14px; line-height: 1.6; }
+.opts { display: flex; flex-direction: column; gap: 6px; }
+.opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #E5E3DE;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  color: #1a1a1a;
+  font-family: inherit;
+  line-height: 1.5;
+  transition: all .12s;
+}
+.opt-btn:hover:not(:disabled) { background: #F0F6FF; border-color: #93C5FD; }
+.opt-btn.correct { background: #ECFDF5; border-color: #34D399; color: #065F46; }
+.opt-btn.wrong { background: #FEF2F2; border-color: #FCA5A5; color: #7F1D1D; }
+.opt-btn:disabled { cursor: default; }
+.q-feedback {
+  margin-top: 12px;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 7px;
+  line-height: 1.6;
+  display: none;
+}
+.q-feedback.show { display: block; }
+.q-feedback.ok { background: #ECFDF5; color: #065F46; }
+.q-feedback.ng { background: #FEF2F2; color: #7F1D1D; }
+
+/* ===== セットアップペイン ===== */
+.setup-pane { display: none; }
+.setup-pane.active { display: block; }
+
+/* ===== 行動指針カード ===== */
+.rule-card { display:flex; gap:16px; background:#fff; border:1px solid #E5E3DE; border-radius:10px; padding:16px 18px; align-items:flex-start; }
+.rule-card-1 { border-left:4px solid #C4A86B; }
+.rule-card-2 { border-left:4px solid #5B7FA6; }
+.rule-card-3 { border-left:4px solid #5A9E7A; }
+.rule-num { font-size:22px; font-weight:700; color:#9B9B9B; min-width:24px; flex-shrink:0; }
+.rule-en { font-size:16px; font-weight:700; color:#1a1a1a; }
+.rule-ja { font-size:13px; color:#6B6B6B; margin-bottom:6px; }
+.rule-desc { font-size:13px; color:#4B4B4B; line-height:1.7; }
+.rule-section-card { background:#fff; border:1px solid #E5E3DE; border-radius:8px; padding:14px 16px; }
+.rule-section-title { font-size:13px; font-weight:600; color:#1a1a1a; margin-bottom:10px; }
+.rule-list { display:flex; flex-direction:column; gap:6px; }
+.rule-item { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:#4B4B4B; line-height:1.6; }
+.rule-dot { width:6px; height:6px; border-radius:50%; background:#2563EB; flex-shrink:0; margin-top:6px; }
+.rule-dot-ng { background:#DC2626; }
+
+/* ===== クイズカテゴリタブ ===== */
+.quiz-cat-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+.qcat-btn { padding:7px 14px; border-radius:20px; font-size:13px; font-weight:500; border:1px solid #E5E3DE; background:#fff; cursor:pointer; color:#4B4B4B; transition:all .15s; font-family:inherit; }
+.qcat-btn:hover { background:#F0F6FF; border-color:#93C5FD; }
+.qcat-btn.active { background:#2563EB; color:#fff; border-color:#2563EB; }
+
+/* ===== インフラ工程表 ===== */
+.infra-steps { display: flex; flex-direction: column; gap: 6px; }
+.infra-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 16px;
+  background: #fff;
+  border: 1px solid #E5E3DE;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .12s;
+  counter-increment: step-counter;
+  position: relative;
+}
+.infra-step:hover { background: #F9F8F6; }
+.infra-step input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; width: 16px; height: 16px; cursor: pointer; }
+.infra-step-body { flex: 1; min-width: 0; }
+.infra-step-title { font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 1.5; }
+.infra-step-note { font-size: 13px; color: #6B6B6B; margin-top: 4px; line-height: 1.5; }
+.infra-step-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.infra-link {
+  display: inline-block;
+  font-size: 13px;
+  color: #2563EB;
+  margin-top: 5px;
+  text-decoration: none;
+}
+.infra-link:hover { text-decoration: underline; }
+.infra-step.done { background: #F6FEF9; border-color: #A7F3D0; }
+.infra-step.done .infra-step-title { text-decoration: line-through; color: #9B9B9B; }
+.infra-step.done .infra-step-note { color: #B0B0B0; }
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main { padding: 24px 20px; }
+  .infra-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== ヘッダー ===== -->
+<header class="site-header">
+  <h1>新入社員研修ポータル</h1>
+  <span class="header-badge badge-sit">SIT</span>
+  <span class="header-badge badge-pit">PIT</span>
+</header>
+
+<div class="layout">
+
+  <!-- ===== サイドバー ===== -->
+  <!-- ★ここを編集：ナビ項目を追加・削除できます★ -->
+  <nav class="sidebar">
+    <div class="nav-section-label">はじめに</div>
+    <a class="nav-item active" onclick="showPage('p-first')" href="#">入社初日・セットアップ</a>
+
+    <div class="nav-section-label">行動指針・ルール</div>
+    <a class="nav-item" onclick="showPage('p-rule')" href="#">3つの指針・通所ルール</a>
+
+    <div class="nav-section-label">障がい・福祉理解</div>
+    <a class="nav-item" onclick="showPage('p-video')" href="#">学習動画一覧</a>
+    <a class="nav-item" onclick="showPage('p-quiz')" href="#">理解度テスト</a>
+
+    <div class="nav-section-label">実際の対応</div>
+    <a class="nav-item" onclick="showPage('p-flow')" href="#">1日の流れと確認</a>
+    <a class="nav-item" onclick="showPage('p-taiken')" href="#">体験対応</a>
+  </nav>
+
+  <!-- ===== メイン ===== -->
+  <main class="main">
+
+    <!-- ======================================
+         ページ：入社初日・セットアップ（SIT/PIT統合・タブ切替）
+         ★手順を追加するときは .infra-step ブロックをコピーしてください★
+    ======================================= -->
+    <section id="p-first" class="page-section active">
+      <h2 class="section-heading">入社初日・セットアップ</h2>
+      <p class="section-desc">SIT・PIT それぞれのタブを選んで、上から順に進めてください。完了したらクリックでチェックを入れます。</p>
+
+      <div class="timeline-tabs" style="margin-bottom:24px;">
+        <button class="ttab active-sit" id="stab-sit" onclick="showSetup('sit')">SIT（就労移行支援）</button>
+        <button class="ttab" id="stab-pit" onclick="showSetup('pit')">PIT（就労継続支援A型）</button>
+      </div>
+
+      <!-- ===== SIT セットアップ ===== -->
+      <div id="setup-sit" class="setup-pane active">
+
+        <div class="block-title" style="margin-bottom:12px;">📋 書類・基本設定</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">書類確認・押印</div>
+              <div class="infra-step-note">✅ 労働条件通知書　✅ 秘密保持契約書　✅ 入社手続きシート</div>
+              <a class="infra-link" href="https://docs.google.com/forms/d/e/1FAIpQLSer_WwsfRN4yP6nKoQvRJonKidsN6JQvMLAVqTADF68LKMXxg/viewform?usp=header" target="_blank" onclick="event.stopPropagation()">入社手続きシート（Googleフォーム）→</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Googleアカウントにログイン</div>
+              <div class="infra-step-note warn-text">⚠️ パスワード変更を忘れずに！</div>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Googleドライブの共有方法を学ぶ</div>
+              <a class="infra-link" href="https://www.youtube.com/watch?v=2CL3O0WiuKY" target="_blank" onclick="event.stopPropagation()">Googleドライブ「共有」の使い方を徹底解説（YouTube）→</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チームのメインドライブにアクセス・ブックマーク</div>
+              <a class="infra-link" href="https://drive.google.com/drive/folders/18MtNLGzAMUxUMl6H3rLX0kBnSSctghJ2" target="_blank" onclick="event.stopPropagation()">SIT チームドライブを開く →</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チームの基本情報スプレッドシートを確認</div>
+              <a class="infra-link" href="https://docs.google.com/spreadsheets/d/15O5djjvCPE0eC6y_3A2owwt2mimhxPEn2BAW2cV93IQ/edit?gid=1819014475#gid=1819014475" target="_blank" onclick="event.stopPropagation()">基本情報スプレッドシート（SIT）→</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">freee（勤怠・給与システム）に入る</div>
+              <div class="infra-step-note warn-text">⚠️ 自分の社用アドレス宛に招待が来ます</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">💬 コミュニケーションツール</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チャットツールに入る ─ Microsoft Teams</div>
+              <div class="infra-step-note">社用メール宛の招待から参加</div>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Chatworkグループに参加（SIT：5グループ）</div>
+              <div class="infra-step-note warn-text" style="margin-bottom:6px;">⚠️ ユーザーが入るチャットに社内アドレスが流出しないよう要注意！</div>
+              <div class="infra-step-links" style="flex-direction:column;gap:4px;">
+                <a class="infra-link" href="https://www.chatwork.com/g/kbl3foqehk8lvc" target="_blank" onclick="event.stopPropagation()">【SIT】メインチャット（ユーザー共有）→</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/cwrg0avyl8npjx" target="_blank" onclick="event.stopPropagation()">【SIT】在宅支援チャット（ユーザー共有）→</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/k7gh4h713dbs3e" target="_blank" onclick="event.stopPropagation()">【SIT/PIT】本社連携チャット →</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/oj38usoxadr590" target="_blank" onclick="event.stopPropagation()">【レターズ福祉チーム様×フジ子さん】※経理関連用 →</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/bfn7rbsrw56hq0" target="_blank" onclick="event.stopPropagation()">【SIT/PIT】連携チャット ※2事業所社内メンバー連携用 →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">🗣️ 社内語・表記ルール（SIT/PIT共通）</div>
+        <div class="infra-steps">
+          <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);">
+            <div class="infra-step-body">
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#185FA5;">ユーザー</span>
+                  <span>SITの利用者のこと</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#0F6E56;">メンバー</span>
+                  <span>PITの利用者のこと</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#DC2626;">障がい</span>
+                  <span>「障害」ではなく「障がい」と表記（社内統一ルール）</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">📧 メーリス一覧（SIT）</div>
+        <div class="infra-steps">
+          <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);">
+            <div class="infra-step-body">
+              <div class="infra-step-note warn-text" style="margin-bottom:8px;">⚠️ ユーザーが入るアドレスには社内アドレスを流出させないよう要注意！</div>
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                <div>
+                  <strong>itschool-tokorozawa@letters.co.jp</strong>
+                  <div style="color:var(--color-text-secondary);margin-top:2px;">外部使用用メインメーリス。社員・アルバイト全員参加。</div>
+                </div>
+                <div>
+                  <strong>sit-share@letters.co.jp</strong>
+                  <div style="color:var(--color-text-secondary);margin-top:2px;">カレンダーに予定追加時に設定。村谷は含まれていないため必要な予定の場合は <code style="background:var(--color-background-primary);padding:1px 6px;border-radius:4px;">n-muratani@letters.co.jp</code> へ。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">📊 業務システム・AI</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">AI（Gemini）にログインしてブックマーク</div>
+              <a class="infra-link" href="https://gemini.google.com" target="_blank" onclick="event.stopPropagation()">Gemini を開く →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">🔖 ブックマーク整理のすすめ（SIT）</div>
+        <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);margin-bottom:8px;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="margin-bottom:8px;">業務効率のために、初日にブックマークバーを整理しておきましょう！</div>
+            <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">Chrome のブックマークバーにフォルダを作り、毎日使うものをまとめておくと業務がスムーズになります。</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 毎日使う（最優先でブックマーク）</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    SIT セルフチェックシート
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    SIT 日報スプレッドシート（通常・体験者）
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    チームの基本情報スプレッドシート
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    ノウビー（支援記録・打刻）
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    freee（勤怠）
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    Gemini
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 共有フォルダ・ドキュメント</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    SIT チームドライブ
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    Googleカレンダー
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 コミュニケーション</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    Microsoft Teams（Web版）
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);">
+                    <span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>
+                    Chatwork（Web版）
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="background:#EFF6FF;border-radius:6px;padding:10px 14px;margin-top:12px;font-size:13px;color:#1E40AF;">
+              💡 Chromeのブックマークバーは <strong>Ctrl+Shift+B（Mac: ⌘+Shift+B）</strong> で表示/非表示を切り替えられます。フォルダを右クリック→「フォルダを追加」で整理しましょう！
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /setup-sit -->
+
+      <!-- ===== PIT セットアップ ===== -->
+      <div id="setup-pit" class="setup-pane">
+
+        <div class="block-title" style="margin-bottom:12px;">📋 書類・基本設定</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">書類確認・押印</div>
+              <div class="infra-step-note">✅ 労働条件通知書　✅ 秘密保持契約書　✅ 入社手続きシート</div>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Googleアカウントにログイン</div>
+              <div class="infra-step-note warn-text">⚠️ パスワード変更を忘れずに！</div>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Googleドライブの共有方法を学ぶ</div>
+              <a class="infra-link" href="https://www.youtube.com/watch?v=2CL3O0WiuKY" target="_blank" onclick="event.stopPropagation()">Googleドライブ「共有」の使い方を徹底解説（YouTube）→</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チームのメインドライブにアクセス・ブックマーク</div>
+              <a class="infra-link" href="https://drive.google.com/drive/folders/0AMf0aDKo4cmXUk9PVA" target="_blank" onclick="event.stopPropagation()">PIT チームドライブを開く →</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チームの基本情報スプレッドシートを確認</div>
+              <a class="infra-link" href="https://docs.google.com/spreadsheets/d/1H1c7mnHvxhDipgofEBaW8eiEByqqnie0-EPRWcjk1Pk/edit?gid=0#gid=0" target="_blank" onclick="event.stopPropagation()">基本情報スプレッドシート（PIT）→</a>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">freee（勤怠・給与システム）に入る</div>
+              <div class="infra-step-note warn-text">⚠️ 自分の社用アドレス宛に招待が来ます</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">💬 コミュニケーションツール</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">チャットツールに入る ─ Slack</div>
+              <div class="infra-step-note">社用メール宛の招待から参加</div>
+            </div>
+          </div>
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">Chatworkグループに参加（PIT：3グループ）</div>
+              <div class="infra-step-note warn-text" style="margin-bottom:6px;">⚠️ メンバーが入るチャットに社内アドレスが流出しないよう要注意！</div>
+              <div class="infra-step-links" style="flex-direction:column;gap:4px;">
+                <a class="infra-link" href="https://www.chatwork.com/g/k7gh4h713dbs3e" target="_blank" onclick="event.stopPropagation()">【SIT/PIT】本社連携チャット →</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/oj38usoxadr590" target="_blank" onclick="event.stopPropagation()">【レターズ福祉チーム様×フジ子さん】※経理関連用 →</a>
+                <a class="infra-link" href="https://www.chatwork.com/g/bfn7rbsrw56hq0" target="_blank" onclick="event.stopPropagation()">【SIT/PIT】連携チャット ※2事業所社内メンバー連携用 →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">🗣️ 社内語・表記ルール（SIT/PIT共通）</div>
+        <div class="infra-steps">
+          <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);">
+            <div class="infra-step-body">
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#185FA5;">ユーザー</span>
+                  <span>SITの利用者のこと</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#0F6E56;">メンバー</span>
+                  <span>PITの利用者のこと</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:14px;">
+                  <span style="font-weight:600;min-width:80px;color:#DC2626;">障がい</span>
+                  <span>「障害」ではなく「障がい」と表記（社内統一ルール）</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">📧 メーリス一覧（PIT）</div>
+        <div class="infra-steps">
+          <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);">
+            <div class="infra-step-body">
+              <div class="infra-step-note warn-text" style="margin-bottom:8px;">⚠️ メンバーが入るアドレスには社内アドレスを流出させないよう要注意！</div>
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                <div>
+                  <strong>pit-tachikawa@litlight.co.jp</strong>
+                  <div style="color:var(--color-text-secondary);margin-top:2px;">外部使用用メインメーリス。社員・アルバイト全員参加。</div>
+                </div>
+                <div>
+                  <strong>pit-share@litlight.co.jp</strong>
+                  <div style="color:var(--color-text-secondary);margin-top:2px;">カレンダーに予定追加時に設定。村谷は含まれていないため必要な予定の場合は <code style="background:var(--color-background-primary);padding:1px 6px;border-radius:4px;">n-muratani@letters.co.jp</code> へ。</div>
+                </div>
+                <div>
+                  <strong>allmember.pit@gmail.com</strong>
+                  <div style="color:var(--color-text-secondary);margin-top:2px;">メンバー・体験者共通利用用。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">📊 業務システム・AI</div>
+        <div class="infra-steps">
+          <div class="infra-step" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <div class="infra-step-body">
+              <div class="infra-step-title">AI（Gemini）にログインしてブックマーク</div>
+              <a class="infra-link" href="https://gemini.google.com" target="_blank" onclick="event.stopPropagation()">Gemini を開く →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="block-title" style="margin-bottom:12px;">🔖 ブックマーク整理のすすめ（PIT）</div>
+        <div class="infra-step" style="cursor:default;background:var(--color-background-secondary);margin-bottom:8px;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="margin-bottom:8px;">業務効率のために、初日にブックマークバーを整理しておきましょう！</div>
+            <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">Chrome のブックマークバーにフォルダを作り、毎日使うものをまとめておくと業務がスムーズになります。</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 毎日使う（最優先でブックマーク）</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>PIT セルフチェックシート（朝・午後）</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>PIT 日報スプレッドシート</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>チームの基本情報スプレッドシート</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>ノウビー（支援記録・打刻・転記）</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>freee（勤怠）</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>Gemini</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 共有フォルダ・ドキュメント</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>PIT チームドライブ</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>Googleカレンダー</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-weight:600;color:var(--color-text-primary);margin-bottom:5px;">📁 コミュニケーション</div>
+                <div style="display:flex;flex-direction:column;gap:4px;padding-left:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>Slack（Web版）</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-secondary);"><span style="width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;display:inline-block;"></span>Chatwork（Web版）</div>
+                </div>
+              </div>
+            </div>
+            <div style="background:#EFF6FF;border-radius:6px;padding:10px 14px;margin-top:12px;font-size:13px;color:#1E40AF;">
+              💡 Chromeのブックマークバーは <strong>Ctrl+Shift+B（Mac: ⌘+Shift+B）</strong> で表示/非表示を切り替えられます。フォルダを右クリック→「フォルダを追加」で整理しましょう！
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /setup-pit -->
+    </section>
+
+    <!-- ======================================
+         ページ：学習動画一覧
+         ★動画追加：ブロックをコピーしてURL・タイトル・時間を変えるだけ★
+    ======================================= -->
+    <section id="p-video" class="page-section">
+      <h2 class="section-heading">障がい・福祉理解 学習動画</h2>
+      <p class="section-desc">各動画を視聴してから理解度テストに挑戦してください。<span style="background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;font-size:13px;font-weight:500;margin-left:6px;">倍速視聴OK！内容が理解できればOKです</span></p>
+
+      <div class="block-title">制度・サービス基礎</div>
+      <div class="video-list">
+        <a class="video-card" href="https://www.youtube.com/watch?v=3jXKR3U4fjI" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">障害福祉サービスとは</div><div class="video-dur">25分17秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=6gsTTx0p2a8" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">障害支援区分とは（区分と等級）</div><div class="video-dur">14分48秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=k-RAsI5eQhQ" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">障害福祉サービスの利用手続き</div><div class="video-dur">13分39秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=SNOdOWs_r50" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">就労移行支援と就労継続支援A型・B型の違い</div><div class="video-dur">11分45秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=mxfyOs0BO6w" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">報酬の構造</div><div class="video-dur">16分40秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=P2Ep5BrB3rc" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">記録の重要性</div><div class="video-dur">11分52秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="block-title">精神疾患・障がい理解</div>
+      <div class="video-list">
+        <a class="video-card" href="https://www.youtube.com/watch?v=5qVqCEKwVU0" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">精神科の病気の全体像</div><div class="video-dur">22分11秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=9dO__xIipWQ" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">うつ病</div><div class="video-dur">16分33秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=pyE00kKfsAE" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">適応障害</div><div class="video-dur">21分07秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=l9Mz3YELtmI" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">双極性障害</div><div class="video-dur">16分49秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=87ygVYd-cfk" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">境界性パーソナリティ障害</div><div class="video-dur">11分13秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=9TBoNdEYWNQ" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">発達障害</div><div class="video-dur">14分50秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=9SwRMXQGPUI" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">ADHD/ASDの長所</div><div class="video-dur">10分50秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=hoY3jx-lrDU" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">発達障害と知的障害の違い</div><div class="video-dur">9分37秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=xJT7PLp6WgU" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">精神疾患の治療法</div><div class="video-dur">1時間02分</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+        <a class="video-card" href="https://youtu.be/lXmT9dUTBHk" target="_blank">
+          <div class="video-play"><div class="play-icon"></div></div>
+          <div><div class="video-title">認知行動療法</div><div class="video-dur">10分57秒</div></div>
+          <span class="video-link">開く →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ======================================
+         ページ：理解度テスト（項目別タブ・大幅増量）
+    ======================================= -->
+    <section id="p-quiz" class="page-section">
+      <h2 class="section-heading">理解度テスト</h2>
+      <p class="section-desc">カテゴリごとに挑戦できます。全カテゴリ合計30問以上。</p>
+
+      <div class="quiz-score-bar">
+        <div>
+          <div class="quiz-score-num" id="score-display">0 / 0問</div>
+          <div class="quiz-score-label">現在のカテゴリの正解数</div>
+        </div>
+        <button class="reset-btn" onclick="resetQuiz()">このカテゴリをリセット</button>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <span class="prog-label" id="prog-label">0/0 回答済み</span>
+      </div>
+
+      <div class="quiz-cat-tabs" id="quiz-cat-tabs"></div>
+      <div class="quiz-list" id="quiz-list"></div>
+    </section>
+
+    <!-- ======================================
+         ページ：行動指針・ルール
+    ======================================= -->
+    <section id="p-rule" class="page-section">
+      <h2 class="section-heading">行動指針・通所ルール</h2>
+      <p class="section-desc">利用者さんに伝えているルールを、支援員も同じ基準で徹底しましょう。</p>
+
+      <!-- 3つの指針 -->
+      <div class="block-title">SITとPITの3つの指針</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+        <div class="rule-card rule-card-1">
+          <div class="rule-num">1</div>
+          <div class="rule-body">
+            <div class="rule-en">Let's greet</div>
+            <div class="rule-ja">挨拶をする</div>
+            <div class="rule-desc">挨拶は、印象・信頼・安心感を自分から作る手法です。「おはようございます」「ありがとうございます」「お疲れさまでした」から始めていきましょう。</div>
+          </div>
+        </div>
+        <div class="rule-card rule-card-2">
+          <div class="rule-num">2</div>
+          <div class="rule-body">
+            <div class="rule-en">Keep clean</div>
+            <div class="rule-ja">清潔とメリハリを保つ</div>
+            <div class="rule-desc">メリハリをもって気持ちよく次のタスクに向かいましょう。自分の周りだけでなく、共有空間を綺麗に保つことは、集中力や信頼につながります。</div>
+          </div>
+        </div>
+        <div class="rule-card rule-card-3">
+          <div class="rule-num">3</div>
+          <div class="rule-body">
+            <div class="rule-en">Think next</div>
+            <div class="rule-ja">考えて動く</div>
+            <div class="rule-desc">【next】には様々な意味を込めています。【次】【隣】【その先】を思いやり、お互いに心地よい空間・信頼関係を創りましょう。また自分にとっての次（目標）もしっかり確認しながら過ごしましょう。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 通所ルール：生活・行動 -->
+      <div class="block-title">通所ルール（生活・行動編）</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+        <div class="rule-section-card">
+          <div class="rule-section-title">1. 通所時間・連絡</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>欠席・遅刻・早退は<strong>必ず9:45までに連絡</strong>（電話が難しい場合はLINEも可）</div>
+            <div class="rule-item"><span class="rule-dot"></span>連絡なしは"無断欠席"とみなします</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">2. 基本マナー・習慣</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>社内外であれ、施設内では必ず挨拶をしましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>ゴミの分別をしましょう（燃えるゴミ・廃プラ）</div>
+            <div class="rule-item"><span class="rule-dot"></span>共有部は綺麗に使いましょう</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>全室禁煙です</div>
+            <div class="rule-item"><span class="rule-dot"></span>掃除をしましょう（退室前にデスク周り・使用スペースの清掃）</div>
+            <div class="rule-item"><span class="rule-dot"></span>椅子は整えて帰りましょう</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>汚れた衣類・物品は禁止（不衛生な状態での通所は控えましょう）</div>
+            <div class="rule-item"><span class="rule-dot"></span>トイレはきれいに使いましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>手洗い・うがいをしましょう（感染予防の基本）</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">3. 行動ルール</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>私的な連絡先の交換は禁止です（トラブル防止のため原則不可）</div>
+            <div class="rule-item"><span class="rule-dot"></span>貴重品の管理は自分で行いましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>共有物は丁寧に扱いましょう</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>他利用者様への宗教・政治・営利活動はご遠慮ください</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>当事業所への贈答品はお断りいたします</div>
+            <div class="rule-item"><span class="rule-dot"></span>交通ルールを厳守し、安全に十分な配慮のもと通所しましょう</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">4. 目指す姿勢</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>企業実習・就労を見据えた取り組みを意識</div>
+            <div class="rule-item"><span class="rule-dot"></span>他者も心地よく過ごせる空間づくりに協力</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>ハラスメント・威圧的言動は禁止です</div>
+            <div class="rule-item"><span class="rule-dot"></span>困ったときは支援員にすぐ相談をしましょう</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 通所ルール：パソコン編 -->
+      <div class="block-title">通所ルール（パソコン編）</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="rule-section-card">
+          <div class="rule-section-title">1. 使用ルール</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>勝手なインストール・アンインストール禁止（個人用ソフトや拡張機能は許可が必要）</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>事業所PCでの私的利用は禁止（SNS閲覧・業務に関係ないサイトの閲覧などもNG）</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">2. アカウント・カリキュラムの使用</div>
+          <div class="rule-desc" style="font-size:13px;color:#4B4B4B;margin-bottom:8px;">貸与または使用を許可したアカウント（Adobe、Microsoft、Udemy等）について厳守：</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>第三者への貸与や共有禁止</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>無断でのパスワード変更・設定の改変禁止</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>学習目的外（私的・商用）での利用禁止</div>
+            <div class="rule-item"><span class="rule-dot rule-dot-ng"></span>勤務時間外・契約期間外の利用禁止</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">3. 丁寧に使う意識</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>共有機材は大切に扱いましょう（キーボードやマウスも丁寧に）</div>
+            <div class="rule-item"><span class="rule-dot"></span>PCセット使用後は専用OAクリーナーで除菌し、整えましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>PCバッグは床に置かず、所定の棚に戻しましょう</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">4. データ・情報管理</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>大切なデータはクラウド保存（Google Drive）も活用しましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>共有パソコン内に個人データ/情報は残さず、都度削除をしましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>トラブル・エラーはすぐ支援員に相談しましょう</div>
+          </div>
+        </div>
+        <div class="rule-section-card">
+          <div class="rule-section-title">5. 情報セキュリティ意識</div>
+          <div class="rule-list">
+            <div class="rule-item"><span class="rule-dot"></span>他人のファイル・画面・設定を見つけた場合は、支援員に相談しましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>ログアウトやシャットダウンを忘れずに行いましょう</div>
+            <div class="rule-item"><span class="rule-dot"></span>離席するときは画面ロック（Win+L）をかけましょう</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ===== SIT専用学習資料 ===== -->
+      <div class="block-title" style="margin-bottom:8px;">
+        <span class="header-badge badge-sit" style="margin-right:6px;">SIT専用</span>
+        就労移行ITスクールのマインド・カリキュラム
+      </div>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;">SITスタッフとして、ユーザー支援の根幹となる考え方と、ユーザーが歩むカリキュラムを理解しましょう。</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+
+        <div class="taiken-card">
+          <h4>ミッション：THE BORDERLESS WORLD.〜障がいという線引きをなくす〜</h4>
+          <div style="font-size:14px;line-height:1.8;color:var(--color-text-primary);">障がいとは人間個人の特性ではなく、環境によって起きるもの。多様なことが価値であるこの時代に、すべての人が輝ける世界を創ること。それが私達の使命です。人の可能性を諦めず、選択肢を広げる場所であり続けます。</div>
+        </div>
+
+        <div class="taiken-card">
+          <h4>スタンス</h4>
+          <div style="font-size:14px;line-height:1.8;color:var(--color-text-primary);">就労移行ITスクールとは、生きづらさの解決をするコミュニティです。本当にユーザーの自立のためになることは何なのかを考え、<strong>配慮はしても遠慮はしない</strong>、本人のために伝えるべきことを伝える、一人間同士のコミュニケーションを徹底しましょう。「障がいだから」ではなく、一個人としてユーザー本人の努力の並走者として、この場所が人生が好転するきっかけとなるように。</div>
+        </div>
+
+        <div class="taiken-card">
+          <h4>ルーツ10の約束（クルーとして目指す姿勢）</h4>
+          <div class="step-list">
+            <div class="step-item"><span class="step-n">1</span>できない理由を探さない ─ 「どうしたらできるか」を常に考える</div>
+            <div class="step-item"><span class="step-n">2</span>答えを導く方法を教える ─ 答えではなくやり方を教える</div>
+            <div class="step-item"><span class="step-n">3</span>本気で向き合い曖昧にしない ─ 質問・意見に正面から向き合う</div>
+            <div class="step-item"><span class="step-n">4</span>愛と尊敬と共に厳しさも持つ ─ 褒め言葉は言いふらし、指摘は本人に</div>
+            <div class="step-item"><span class="step-n">5</span>ポジティブ雰囲気は自分で作る ─ 挨拶は相手の顔を見て笑顔で</div>
+            <div class="step-item"><span class="step-n">6</span>援助者ではなく努力の並走者になる ─ 共に学ぶ・感謝し合う</div>
+            <div class="step-item"><span class="step-n">7</span>小さな違和感を見過ごさない ─ 気づき・共有・対応を徹底する</div>
+            <div class="step-item"><span class="step-n">8</span>自己スキルを伸ばし続ける ─ 昨日の自分より一歩成長を意識</div>
+            <div class="step-item"><span class="step-n">9</span>一人ではなく、チームで ─ 一人で抱え込まず連携をとる</div>
+            <div class="step-item"><span class="step-n">10</span>テレパシーに頼らない ─ 「伝わった」と思っても30%。伝え続ける</div>
+          </div>
+        </div>
+
+        <div class="taiken-card">
+          <h4>職業準備性ピラミッド ─ ITスキルだけでは就職はできない！？</h4>
+          <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">PC/ITスキルはピラミッドの頂点。土台から順番に整えることが大切です。</p>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="background:#DBEAFE;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;font-size:13px;color:#1E40AF;margin-bottom:3px;">【頂点】職業適性（PC/ITスキルはここ）</div><div style="font-size:12px;color:#1E40AF;">PCスキル・指示理解・業務処理能力・クオリティ・長所短所の自己認識・環境変化への対応</div></div>
+            <div style="background:#EDE9FE;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;font-size:13px;color:#5B21B6;margin-bottom:3px;">基本的労働習慣</div><div style="font-size:12px;color:#5B21B6;">報連相・規則を守る・身だしなみ・作業態度・意欲・時間や量管理</div></div>
+            <div style="background:#D1FAE5;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;font-size:13px;color:#065F46;margin-bottom:3px;">対人スキル</div><div style="font-size:12px;color:#065F46;">挨拶・返事・言葉遣い・共同作業・感情コントロール・謝罪</div></div>
+            <div style="background:#FEF3C7;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;font-size:13px;color:#92400E;margin-bottom:3px;">日常生活管理</div><div style="font-size:12px;color:#92400E;">栄養管理・金銭管理・休息・ストレス対処・公共交通機関の利用</div></div>
+            <div style="background:#FEE2E2;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;font-size:13px;color:#991B1B;margin-bottom:3px;">【土台】健康管理</div><div style="font-size:12px;color:#991B1B;">食事・通院・服薬の自己管理・障がいの自己理解・SOSの発信</div></div>
+          </div>
+          <div style="background:#FEF3C7;border-radius:6px;padding:10px 14px;margin-top:10px;font-size:13px;color:#92400E;font-weight:500;">⚠️ 土台が整わなければ始まらない！障がい理解や体調・通所時の様子を重要視する企業が多い。</div>
+        </div>
+
+        <div class="taiken-card">
+          <h4>就労移行ITスクールの3ステップ</h4>
+          <div class="step-list">
+            <div class="step-item"><span class="step-n" style="color:#5A9E7A;">①</span><div><strong>準備フェーズ（1〜12か月 / 週2〜4通所）</strong><div style="font-size:13px;color:var(--color-text-secondary);margin-top:3px;">生活リズムとスキルの土台づくり。タイピング100字以上・Office操作・報連相など</div></div></div>
+            <div class="step-item"><span class="step-n" style="color:#2E8B3E;">②</span><div><strong>実習フェーズ（2〜6か月 / 週5通所）</strong><div style="font-size:13px;color:var(--color-text-secondary);margin-top:3px;">スキルを磨きながら実績づくり。タイピング120字以上・専門スキル習得・ポートフォリオ制作</div></div></div>
+            <div class="step-item"><span class="step-n" style="color:#185FA5;">③</span><div><strong>就活フェーズ（3〜6か月 / 週5通所）</strong><div style="font-size:13px;color:var(--color-text-secondary);margin-top:3px;">必要書類の作成・面接練習・応募。このフェーズでできることはこれまでの総括のみ！</div></div></div>
+          </div>
+        </div>
+
+        <div class="taiken-card">
+          <h4>ハードスキルのスキルアップフロー（MUST → 初級 → 中級 → 上級）</h4>
+          <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">まずMUST（PC基礎・事務基礎・ITリテラシー）をクリアし、+αの専門スキルへ進みます。</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:var(--color-background-secondary);padding:10px 14px;border-radius:6px;"><div style="font-weight:600;font-size:13px;margin-bottom:5px;">💼 事務プロフェッショナル</div><div style="font-size:12px;color:var(--color-text-secondary);">Excel応用・MOS・GAS・VBA・Power Automate・Python自動化</div></div>
+            <div style="background:var(--color-background-secondary);padding:10px 14px;border-radius:6px;"><div style="font-weight:600;font-size:13px;margin-bottom:5px;">🎨 グラフィックデザイン</div><div style="font-size:12px;color:var(--color-text-secondary);">Illustrator・Photoshop・バナー・ポスター・ポートフォリオ</div></div>
+            <div style="background:var(--color-background-secondary);padding:10px 14px;border-radius:6px;"><div style="font-weight:600;font-size:13px;margin-bottom:5px;">🌐 WEBデザイン</div><div style="font-size:12px;color:var(--color-text-secondary);">HTML/CSS・Figma・UI/UX設計・LP制作・ポートフォリオ</div></div>
+            <div style="background:var(--color-background-secondary);padding:10px 14px;border-radius:6px;"><div style="font-weight:600;font-size:13px;margin-bottom:5px;">🎬 動画編集・制作</div><div style="font-size:12px;color:var(--color-text-secondary);">PremierePro・After Effects・PR動画・ポートフォリオ</div></div>
+            <div style="background:var(--color-background-secondary);padding:10px 14px;border-radius:6px;grid-column:1/-1;"><div style="font-weight:600;font-size:13px;margin-bottom:5px;">💻 プログラミング</div><div style="font-size:12px;color:var(--color-text-secondary);">HTML/CSS/JavaScript・Python・Webアプリ・Git/GitHub・フレームワーク・ポートフォリオ</div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================
+         ページ：1日の流れ（SIT / PIT切替）
+         ★時間・内容を変えたい場合：tableの各tdを直接書き換えてください★
+    ======================================= -->
+    <section id="p-flow" class="page-section">
+      <h2 class="section-heading">1日の流れと確認</h2>
+      <p class="section-desc">SIT・PITそれぞれのタイムラインと、スプレッドシートの確認方法をまとめています。</p>
+
+      <div class="timeline-tabs">
+        <button class="ttab active-sit" id="ttab-sit" onclick="showTL('sit')">SIT（就労移行支援）</button>
+        <button class="ttab" id="ttab-pit" onclick="showTL('pit')">PIT（就労継続支援A型）</button>
+      </div>
+
+      <!-- SIT タイムライン（デフォルト表示） -->
+      <div id="tl-sit" class="timeline-pane active">
+        <table class="tl-table">
+          <thead><tr><th>時間</th><th colspan="2">対応内容</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="tl-time">9:30〜</td>
+              <td colspan="2" class="tl-staff">
+                朝礼・各種準備
+                <div class="tl-note">利用者さんPC準備 / 体験者準備 / お弁当スチーマーの水補充 / 掃除機・拭き掃除・整理整頓</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time"></td>
+              <td colspan="2" class="tl-staff">利用者さん挨拶・受け入れ</td>
+            </tr>
+            <tr>
+              <td class="tl-time">10:00〜</td>
+              <td colspan="2" class="tl-staff">利用者さんとの朝礼</td>
+            </tr>
+            <tr>
+              <td class="tl-time"></td>
+              <td class="tl-user">セルフチェック入力</td>
+              <td class="tl-staff">
+                利用者さんセルフチェック確認
+                <div class="tl-note">
+                  <span class="tl-tag tag-important">要注意者 把握・対応</span><br>
+                  スプレッドシートで状態確認。必要に応じて声かけ・個別対応（のちに対応もしてもらいます）
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time">11:00〜</td>
+              <td colspan="2" class="tl-staff">個別学習の見守りと声かけ</td>
+            </tr>
+            <tr>
+              <td class="tl-time">12:00〜</td>
+              <td colspan="2" class="tl-staff">お昼休憩</td>
+            </tr>
+            <tr>
+              <td class="tl-time">13:00〜</td>
+              <td class="tl-user">午後のセルフチェック</td>
+              <td class="tl-staff">
+                セルフチェック確認・対応
+                <div class="tl-note"><span class="tl-tag tag-important">要注意者 把握・対応</span></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time"></td>
+              <td colspan="2" class="tl-staff">ストレッチ・講座</td>
+            </tr>
+            <tr>
+              <td class="tl-time">14:00〜</td>
+              <td colspan="2" class="tl-staff">個別学習の見守りと声かけ</td>
+            </tr>
+            <tr>
+              <td class="tl-time">14:45〜</td>
+              <td class="tl-user">日報入力</td>
+              <td class="tl-staff">
+                日報確認
+                <div class="tl-note">スプレッドシートで全員分を確認</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time">15:00〜</td>
+              <td colspan="2" class="tl-staff">夕会参加・利用者さん挨拶 / 見学者さん準備</td>
+            </tr>
+            <tr>
+              <td class="tl-time">時間を見つけて実施</td>
+              <td colspan="2" class="tl-staff">
+                ノウビーにて記録作成
+                <div class="tl-note">・打刻漏れ・食事有無の確認、修正<br>・セルフチェックの内容確認と転記<br>・講座作成</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PIT タイムライン -->
+      <div id="tl-pit" class="timeline-pane">
+        <table class="tl-table">
+          <thead><tr><th>時間</th><th>利用者</th><th>支援員</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="tl-time">9:00</td>
+              <td class="tl-user">─</td>
+              <td class="tl-staff">各種準備</td>
+            </tr>
+            <tr>
+              <td class="tl-time">9:15〜</td>
+              <td class="tl-user">─</td>
+              <td class="tl-staff">
+                社内朝礼
+                <div class="tl-note">□ 業務振り分け　□ 講座フォロー担当</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time">10:00〜</td>
+              <td class="tl-user" colspan="2">朝礼（利用者・スタッフ合同）</td>
+            </tr>
+            <tr>
+              <td class="tl-time">10:05〜10:10</td>
+              <td class="tl-user">セルフチェック入力（5分以内）</td>
+              <td class="tl-staff">
+                セルフチェック確認
+                <div class="tl-note">
+                  <span class="tl-tag tag-important">要注意者 個別対応</span><br>
+                  スプレッドシートで状態を把握し、必要に応じて声かけ・個別対応
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="tl-time">10:10〜</td>
+              <td class="tl-user">業務</td>
+              <td class="tl-staff">業務・記録<div class="tl-note"><span class="tl-tag tag-record">随時記録入力</span></div></td>
+            </tr>
+            <tr>
+              <td class="tl-time">12:00〜</td>
+              <td class="tl-user" colspan="2">昼休憩</td>
+            </tr>
+            <tr>
+              <td class="tl-time">13:00〜</td>
+              <td class="tl-user">PIT講座参加</td>
+              <td class="tl-staff">講座対応</td>
+            </tr>
+            <tr>
+              <td class="tl-time">14:00〜</td>
+              <td class="tl-user">業務</td>
+              <td class="tl-staff">業務・記録<div class="tl-note"><span class="tl-tag tag-record">随時記録入力</span></div></td>
+            </tr>
+            <tr>
+              <td class="tl-time">14:55</td>
+              <td class="tl-user">日報入力</td>
+              <td class="tl-staff">日報確認<div class="tl-note">スプレッドシートで全員の日報を確認</div></td>
+            </tr>
+            <tr>
+              <td class="tl-time">15:00</td>
+              <td class="tl-user" colspan="2">夕会</td>
+            </tr>
+            <tr>
+              <td class="tl-time">15:00〜</td>
+              <td class="tl-user">─</td>
+              <td class="tl-staff">各種業務</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- セルフチェック・日報 統合セクション -->
+      <div class="divider"></div>
+      <div class="block-title" style="margin-bottom:16px;">📊 セルフチェック・日報の確認方法</div>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;">毎日必ず確認します。スプレッドシートで要注意者を把握し、必要に応じて声かけ・個別対応を行います。</p>
+
+      <div class="block-title" style="margin-bottom:10px;">各スプレッドシートへのリンク</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
+        <div class="infra-step" style="cursor:default;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="color:#1E40AF;">SIT セルフチェック</div>
+            <div class="infra-step-note">毎朝10:05〜10:10 にユーザーが入力</div>
+            <a class="infra-link" href="https://docs.google.com/spreadsheets/d/1_TUdmpn1kn92W438-bkkPbYM7c-waodpbcT1YNitjfM/edit?gid=324849559#gid=324849559" target="_blank">開く →</a>
+          </div>
+        </div>
+        <div class="infra-step" style="cursor:default;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="color:#065F46;">PIT セルフチェック</div>
+            <div class="infra-step-note">朝（10:00〜）・午後（13:00〜）の2回入力</div>
+            <a class="infra-link" href="https://docs.google.com/spreadsheets/d/17fB7f_sKCJ7aoiOEiMvkZ0BMM_nC1cV0xsiqqnTZvaM/edit?resourcekey=&gid=1040875135#gid=1040875135" target="_blank">開く →</a>
+          </div>
+        </div>
+        <div class="infra-step" style="cursor:default;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="color:#1E40AF;">SIT 日報</div>
+            <div class="infra-step-note">14:55 にユーザーが入力</div>
+            <div class="infra-step-links">
+              <a class="infra-link" href="https://docs.google.com/spreadsheets/d/1mELoFHgusmvt7ZnW4-lueThIAdsKGxgtfv7z8PD6Ouo/edit?gid=879502458#gid=879502458" target="_blank">通常 →</a>
+              <a class="infra-link" href="https://docs.google.com/spreadsheets/d/1mELoFHgusmvt7ZnW4-lueThIAdsKGxgtfv7z8PD6Ouo/edit?gid=879502458#gid=879502458" target="_blank">体験者 →</a>
+            </div>
+          </div>
+        </div>
+        <div class="infra-step" style="cursor:default;">
+          <div class="infra-step-body">
+            <div class="infra-step-title" style="color:#065F46;">PIT 日報</div>
+            <div class="infra-step-note">14:45〜 にメンバーが入力。ノウビーへの転記も実施。</div>
+            <a class="infra-link" href="https://docs.google.com/spreadsheets/d/1vHZfTyv3mZQ_99gDpHdRKE7-5kzDMGtn4p4OL6RRHO4/edit?gid=1424519336#gid=1424519336" target="_blank">開く →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-title" style="margin-bottom:10px;">確認するポイント</div>
+      <div class="sc-list" style="margin-bottom:16px;">
+        <div class="sc-item"><div class="sc-dot"></div>体調・気分のスコアが前日比で大きく下がっている人はいないか</div>
+        <div class="sc-item"><div class="sc-dot"></div>コメント欄に不安・悩み・体調不良の記載がある人はいないか</div>
+        <div class="sc-item"><div class="sc-dot"></div>連続して低スコアが続いている人はいないか（蓄積疲弊のサイン）</div>
+        <div class="sc-item"><div class="sc-dot"></div>未入力の人はいないか（未来所・体調不良の可能性）</div>
+      </div>
+
+      <div class="block-title" style="margin-bottom:10px;">声かけ・個別対応の目安</div>
+      <div class="sc-list" style="margin-bottom:16px;">
+        <div class="sc-item"><div class="sc-dot"></div>スコアが低い・気になる記述がある → 業務中さりげなく声かけ「最近どうですか？」</div>
+        <div class="sc-item"><div class="sc-dot"></div>本人が話したそうな場合 → 個室や静かな場所で短時間の面談を設ける</div>
+        <div class="sc-item"><div class="sc-dot"></div>急激な変化・緊急性がある場合 → 即座に先輩スタッフ・管理者に共有する</div>
+        <div class="sc-item"><div class="sc-dot"></div>対応した内容は必ずノウビーの記録に残す</div>
+      </div>
+
+      <div class="block-title" style="margin-bottom:10px;">自分自身のセルフチェック（スタッフ向け）</div>
+      <div class="sc-list">
+        <div class="sc-item"><div class="sc-dot"></div>今日の自分の体調・気分を数値（1〜5）で確認する</div>
+        <div class="sc-item"><div class="sc-dot"></div>ユーザー・メンバーの状態に感情的に引っ張られていないか振り返る</div>
+        <div class="sc-item"><div class="sc-dot"></div>困ったことは当日中に先輩スタッフに共有できたか</div>
+        <div class="sc-item"><div class="sc-dot"></div>記録に「事実」と「解釈」を混同せずに書けているか確認する</div>
+        <div class="sc-item"><div class="sc-dot"></div>明日出勤できる状態かどうか、正直に自己評価する</div>
+      </div>
+    </section>
+
+    <!-- ======================================
+         ページ：体験対応
+         ★手順・注意点を自由に追加・変更できます★
+    ======================================= -->
+    <section id="p-taiken" class="page-section">
+      <h2 class="section-heading">体験対応の方法</h2>
+      <p class="section-desc">体験者（見学者）対応の流れと注意点です。</p>
+
+      <div class="taiken-card">
+        <h4>体験前日までの準備</h4>
+        <div class="step-list">
+          <div class="step-item"><span class="step-n">1</span>体験者のプロフィール・診断名・受診履歴を確認</div>
+          <div class="step-item"><span class="step-n">2</span>体験スケジュールを作成し、担当スタッフで共有</div>
+          <div class="step-item"><span class="step-n">3</span>施設内の案内動線・使用部屋を確保</div>
+          <div class="step-item"><span class="step-n">4</span>ノウビーに体験者情報を事前登録</div>
+        </div>
+      </div>
+
+      <div class="taiken-card">
+        <h4>体験当日の流れ</h4>
+        <div class="step-list">
+          <div class="step-item"><span class="step-n">1</span>受付・自己紹介（スタッフ名・役割を伝える）</div>
+          <div class="step-item"><span class="step-n">2</span>施設説明・1日のスケジュール案内（10〜15分）</div>
+          <div class="step-item"><span class="step-n">3</span>体験プログラムへの参加（無理強いしない・本人ペース尊重）</div>
+          <div class="step-item"><span class="step-n">4</span>昼食時の様子観察（コミュニケーション・疲労感の確認）</div>
+          <div class="step-item"><span class="step-n">5</span>終了前の振り返り面談（感想・疑問・今後の意向を聞く）</div>
+          <div class="step-item"><span class="step-n">6</span>体験記録の作成（当日中に完成）</div>
+        </div>
+      </div>
+
+      <div class="taiken-card">
+        <h4>体験対応で気をつけること</h4>
+        <div class="step-list">
+          <div class="step-item"><span class="step-n">✓</span>障がいの「症状」ではなく「その人自身」を見る</div>
+          <div class="step-item"><span class="step-n">✓</span>沈黙を無理に埋めない（安心できる間合いを大切に）</div>
+          <div class="step-item"><span class="step-n">✓</span>「できないこと」より「強み・できること」に注目して観察する</div>
+          <div class="step-item"><span class="step-n">✓</span>不安・疑問は先輩スタッフに当日中に相談する</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ===== ナビ切替 ===== */
+function showPage(id) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(id)) n.classList.add('active');
+  });
+}
+
+/* ===== チェックリスト ===== */
+function toggleCheck(item) {
+  const cb = item.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('done', cb.checked);
+}
+
+/* ===== セットアップタブ切替 ===== */
+function showSetup(type) {
+  ['sit','pit'].forEach(t => {
+    document.getElementById('setup-'+t).classList.toggle('active', t===type);
+    const tab = document.getElementById('stab-'+t);
+    tab.className = 'ttab' + (t===type ? ' active-'+t : '');
+  });
+}
+
+/* ===== タイムライン切替 ===== */
+function showTL(type) {
+  ['sit','pit'].forEach(t => {
+    document.getElementById('tl-'+t).classList.toggle('active', t===type);
+    const tab = document.getElementById('ttab-'+t);
+    tab.className = 'ttab' + (t===type ? ' active-'+t : '');
+  });
+}
+
+/* ===== クイズ（カテゴリ別） ===== */
+/* ★問題追加：各カテゴリのqs配列に { q, opts, ans, exp } を追加してください★ */
+const QsAll = {
+  '制度・サービス基礎': [
+    { q:'就労移行支援の利用期間は原則として最長何年間ですか？', opts:['1年間','2年間','3年間','5年間'], ans:1, exp:'就労移行支援の利用期間は原則2年間です。市区町村の認定で1年延長可能な場合があります。' },
+    { q:'就労継続支援A型とB型の最も大きな違いは何ですか？', opts:['通所日数','雇用契約の有無','対象障がいの種類','訓練内容の難易度'], ans:1, exp:'A型は雇用契約あり・最低賃金保障。B型は雇用契約なしで工賃支払い。' },
+    { q:'障害支援区分の段階数として正しいのはどれですか？', opts:['3段階（1〜3）','6段階（1〜6）','5段階（1〜5）','10段階（1〜10）'], ans:1, exp:'1〜6の6段階。区分6が最も支援の必要度が高いとされています。' },
+    { q:'サービス等利用計画を作成するのは誰ですか？', opts:['医師','就労支援員','相談支援専門員','市区町村担当者'], ans:2, exp:'相談支援専門員が作成します。利用者の希望をもとに適切なサービスの組み合わせを提案します。' },
+    { q:'就労継続支援事業所の報酬は主に何によって決まりますか？', opts:['利用者の工賃額','利用者の通所日数（実績）','事業所の売上高','スタッフの資格数'], ans:1, exp:'通所実績（日数）が報酬の基礎。記録の正確性が報酬請求の根拠になります。' },
+    { q:'障害福祉サービスの利用に必要な「受給者証」を発行するのはどこですか？', opts:['病院','ハローワーク','市区町村','都道府県'], ans:2, exp:'受給者証（障害福祉サービス受給者証）は市区町村が発行します。利用者はこれを事業所に提示してサービスを利用します。' },
+    { q:'就労移行支援の目的として最も正しいのはどれですか？', opts:['障がい者の生活介護','一般就労に向けた知識・能力の向上','工賃を支払う就労の場の提供','在宅での訓練支援'], ans:1, exp:'就労移行支援は、一般就労（企業等への就職）を目指す人に対して、就労に必要な知識・能力の向上を支援するサービスです。' },
+  ],
+  '精神疾患・障がい理解': [
+    { q:'うつ病の方への支援で特に重要な姿勢はどれですか？', opts:['「頑張れ」と積極的に励ます','本人のペースを尊重し急かさない','すぐに復職・就労を促す','毎日電話で進捗確認する'], ans:1, exp:'「頑張れ」は逆効果になりやすいです。本人のペースを尊重し、焦らせない関わり方が大切です。' },
+    { q:'発達障害（ASD・ADHD）の支援で有効なアプローチはどれですか？', opts:['口頭のみで曖昧に指示する','ルールを文字・視覚情報で明確に示す','集団への自然な適応を待つ','周囲への配慮を本人の困り感より優先する'], ans:1, exp:'ASD・ADHDの方には、視覚化・文字化された明確なルール提示が有効です。' },
+    { q:'双極性障害の躁状態でみられやすい特徴はどれですか？', opts:['過眠・意欲低下・引きこもり','睡眠が少なくても元気・浪費・多弁','慢性的な疲労感と集中力低下','対人恐怖と強い不安感'], ans:1, exp:'躁状態では睡眠が少なくても元気、テンションが高い、浪費、多弁などが現れます。本人は気づきにくいため支援者の観察が重要です。' },
+    { q:'認知行動療法（CBT）の基本的な考え方として正しいのはどれですか？', opts:['薬物療法との併用は禁忌','考え方（認知）のパターンを変えることで感情・行動を改善する','過去のトラウマを徹底的に掘り起こす','専門家のみが実施できる高度な技法'], ans:1, exp:'歪んだ認知パターンを修正することで感情や行動の改善を図る心理療法です。就労支援の現場でも活用できます。' },
+    { q:'境界性パーソナリティ障害（BPD）の主な特徴として適切なのはどれですか？', opts:['感情が非常に安定している','見捨てられることへの強い恐怖と感情の激しい波','注意が散漫で忘れっぽい','幻覚・妄想が主症状'], ans:1, exp:'BPDは見捨てられることへの強い恐怖、感情の急激な変動、衝動的行動などが特徴です。安定した関係性を保つ支援が重要です。' },
+    { q:'ADHDと自閉スペクトラム症（ASD）が同時にみられることはありますか？', opts:['絶対にない','まれにある','非常によくある','診断基準上は区別がない'], ans:2, exp:'ADHDとASDは重複して診断されることが多く、「重複障がい」として支援計画を立てる必要があります。' },
+    { q:'適応障害とうつ病の主な違いとして正しいのはどれですか？', opts:['適応障害は薬で治らない','適応障害はストレス因が明確で、それがなくなると症状が改善しやすい','うつ病は誰でも必ずなる','適応障害は入院が必須'], ans:1, exp:'適応障害はストレスの原因が明確で、その環境から離れると改善しやすい点がうつ病と異なります。ただし適切な支援がないと長引くこともあります。' },
+  ],
+  '行動指針・通所ルール': [
+    { q:'パレットITワークス立川の「3つの指針」に含まれないのはどれですか？', opts:['Let\'s greet（挨拶をする）','Keep clean（清潔とメリハリを保つ）','Think next（考えて動く）','Work fast（素早く動く）'], ans:3, exp:'3つの指針は「Let\'s greet」「Keep clean」「Think next」です。「Work fast」は含まれません。' },
+    { q:'欠席・遅刻・早退の連絡は何時までに行う必要がありますか？', opts:['8:30まで','9:00まで','9:45まで','10:00まで'], ans:2, exp:'欠席・遅刻・早退は必ず9:45までに連絡が必要です。電話が難しい場合はLINEも可です。' },
+    { q:'事業所PCで禁止されている行為はどれですか？', opts:['Googleドライブでの資料確認','Teamsでの業務連絡','SNS閲覧・業務に関係ないサイト閲覧','Geminiを使った業務補助'], ans:2, exp:'事業所PCでの私的利用（SNS閲覧、業務に関係ないサイトの閲覧など）は禁止されています。' },
+    { q:'利用者との私的な連絡先交換について正しいのはどれですか？', opts:['仲良くなれば交換してもよい','原則禁止（トラブル防止のため）','管理者の許可があれば可','業務上必要なら自由に交換してよい'], ans:1, exp:'私的な連絡先の交換は原則禁止です。トラブル防止のためのルールです。' },
+    { q:'離席するときのPCの正しい操作はどれですか？', opts:['そのまま離席してよい','シャットダウンする','画面ロック（Win+L）をかける','ログアウトは不要'], ans:2, exp:'離席するときは必ず画面ロック（Win+L）をかけましょう。個人情報・利用者情報の保護のために重要です。' },
+    { q:'「Think next（考えて動く）」に込められた「next」の意味として正しいのはどれですか？', opts:['速さを意識すること','次・隣・その先を思いやること','次の休憩を考えること','次のタスクだけに集中すること'], ans:1, exp:'「next」には【次】【隣】【その先】の意味が込められています。お互いへの思いやりと自分自身の目標確認が大切です。' },
+    { q:'共有パソコン使用後の正しい対応はどれですか？', opts:['個人データを残したままでよい','専用OAクリーナーで除菌し整える','次の人のためにそのまま置く','画面はつけたまま離席してよい'], ans:1, exp:'PCセット使用後は専用OAクリーナーで除菌し、整えましょう。共有機材を大切に使う意識が大切です。' },
+  ],
+  '記録・対応の実務': [
+    { q:'支援記録を書く際に最も重要な原則はどれですか？', opts:['スタッフの印象・感想を中心に書く','事実（観察した行動・言葉）と解釈を区別して書く','利用者に不利な情報は記載しない','毎日同じテンプレートで簡潔にまとめる'], ans:1, exp:'「〇〇と言っていた（事実）」「不安を感じている様子（解釈）」のように分けて書くことが原則です。報酬請求の根拠にもなります。' },
+    { q:'セルフチェックで要注意と判断すべきサインはどれですか？', opts:['昨日より少し元気そうに見える','連続して低スコアが続いている','積極的に業務に取り組んでいる','他の利用者と話が弾んでいる'], ans:1, exp:'連続して低スコアが続くのは蓄積疲弊のサインです。スコアの変化の「傾向」を見ることが大切です。' },
+    { q:'利用者から緊急性の高い相談を受けたとき、まず何をすべきですか？', opts:['自分で全て解決しようとする','その場で解決できる答えを即答する','即座に先輩スタッフ・管理者に共有する','翌日のミーティングで報告する'], ans:2, exp:'緊急性の高いケースは即座に先輩スタッフ・管理者に共有することが最優先です。一人で抱え込まないことが重要です。' },
+    { q:'体験対応の振り返り面談で最も大切な姿勢はどれですか？', opts:['できるだけ早く終わらせる','事業所の良い点だけを伝える','体験者の感想・疑問・今後の意向をしっかり聞く','次回の通所日を即決させる'], ans:2, exp:'体験者の感想・疑問・今後の意向をしっかり聞くことが大切です。焦らせず、本人の気持ちを引き出す場にしましょう。' },
+    { q:'ノウビーでの記録作成として「時間を見つけて実施」すべき内容はどれですか？', opts:['朝礼の進行','打刻漏れの確認・修正とセルフチェックの転記','利用者の昼食準備','Slackでの連絡確認'], ans:1, exp:'打刻漏れ・食事有無の確認・修正、セルフチェックの内容確認と転記は、時間を見つけて行う記録業務です。' },
+    { q:'日報確認のタイミングとして正しいのはどれですか？', opts:['翌朝に確認する','PITは14:45〜、SITは14:55頃に確認する','週に1回まとめて確認する','気づいたときに確認する'], ans:1, exp:'PITは14:45〜、SITは14:55頃が日報確認のタイミングです。全員分をスプレッドシートで確認します。' },
+    { q:'支援記録が報酬に直結する理由として正しいのはどれですか？', opts:['記録の量が多いほど報酬が増える','通所実績と支援内容の記録が報酬請求の根拠となるから','記録のデザインが評価されるから','毎日の記録は法的義務ではないから'], ans:1, exp:'障害福祉サービスの報酬は通所実績に基づきます。記録がなければ請求の根拠がなくなります。正確な記録は経営に直結します。' },
+  ],
+};
+
+let currentCat = Object.keys(QsAll)[0];
+let catState = {};
+Object.keys(QsAll).forEach(cat => {
+  catState[cat] = { answered: new Array(QsAll[cat].length).fill(null), correct: 0 };
+});
+
+function buildCatTabs() {
+  const wrap = document.getElementById('quiz-cat-tabs');
+  wrap.innerHTML = '';
+  Object.keys(QsAll).forEach((cat, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'qcat-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = cat + '（' + QsAll[cat].length + '問）';
+    btn.onclick = () => switchCat(cat, btn);
+    wrap.appendChild(btn);
+  });
+}
+
+function switchCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.qcat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildQuiz();
+  updateScore();
+}
+
+function buildQuiz() {
+  const list = document.getElementById('quiz-list');
+  list.innerHTML = '';
+  const qs = QsAll[currentCat];
+  const state = catState[currentCat];
+  qs.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    const answered = state.answered[i];
+    const optHtml = q.opts.map((o, j) => {
+      let cls = 'opt-btn';
+      if (answered !== null) {
+        cls += j === q.ans ? ' correct' : (j === answered ? ' wrong' : '');
+      }
+      return `<button class="${cls}" onclick="answer(${i},${j})" ${answered !== null ? 'disabled' : ''}>${o}</button>`;
+    }).join('');
+    const fbShow = answered !== null;
+    const isOk = answered === q.ans;
+    card.innerHTML = `
+      <div class="q-num">問 ${i+1} ／ ${qs.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts" id="opts${i}">${optHtml}</div>
+      <div class="q-feedback${fbShow ? ' show '+(isOk?'ok':'ng') : ''}" id="fb${i}">${fbShow ? (isOk?'✓ 正解！ ':'✗ 不正解 ')+q.exp : ''}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function answer(qi, oi) {
+  const state = catState[currentCat];
+  if (state.answered[qi] !== null) return;
+  state.answered[qi] = oi;
+  const isOk = oi === QsAll[currentCat][qi].ans;
+  if (isOk) state.correct++;
+  document.querySelectorAll(`#opts${qi} .opt-btn`).forEach((btn, j) => {
+    btn.disabled = true;
+    if (j === QsAll[currentCat][qi].ans) btn.classList.add('correct');
+    else if (j === oi) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb'+qi);
+  fb.textContent = (isOk ? '✓ 正解！ ' : '✗ 不正解 ') + QsAll[currentCat][qi].exp;
+  fb.className = 'q-feedback show ' + (isOk ? 'ok' : 'ng');
+  updateScore();
+}
+
+function updateScore() {
+  const state = catState[currentCat];
+  const qs = QsAll[currentCat];
+  const done = state.answered.filter(a => a !== null).length;
+  document.getElementById('score-display').textContent = `${state.correct} / ${done}問`;
+  document.getElementById('prog-fill').style.width = (done / qs.length * 100) + '%';
+  document.getElementById('prog-label').textContent = `${done}/${qs.length} 回答済み`;
+}
+
+function resetQuiz() {
+  catState[currentCat] = { answered: new Array(QsAll[currentCat].length).fill(null), correct: 0 };
+  buildQuiz();
+  updateScore();
+}
+
+buildCatTabs();
+buildQuiz();
+updateScore();
+</script>
+</body>
+</html>
